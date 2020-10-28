@@ -97,8 +97,8 @@ class NameForm extends React.Component {
   <Form.Group controlId="exampleForm.ControlInput1">
     <Form.Label>环境</Form.Label>
     <Form.Control as='select' value={this.state.env} onChange={this.handleEnv}>
-      <option>开发服</option>
-      <option>测试服</option>
+      <option value='dev'>开发服</option>
+      <option value='test'>测试服</option>
     </Form.Control>
   </Form.Group>
 
@@ -121,11 +121,11 @@ class NameForm extends React.Component {
   <Form.Group controlId="exampleForm.ControlSelect1">
     <Form.Label>解绑项</Form.Label>
     <Form.Control as="select" value={this.state.stuff} onChange={this.handleUnbind}>
-      <option>手机号</option>
-      <option>微信</option>
-      <option>QQ</option>
-      <option>AppleID</option>
-      <option>整个用户（删除）</option>
+      <option value='phone_num'>手机号</option>
+      <option value='wx'>微信</option>
+      <option value='qq'>QQ</option>
+      <option value='ap'>AppleID</option>
+      <option value='user'>整个用户（删除）</option>
     </Form.Control>
   </Form.Group>
   <Button variant="primary" type="submit">
