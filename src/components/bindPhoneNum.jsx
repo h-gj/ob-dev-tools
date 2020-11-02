@@ -1,8 +1,8 @@
 import axios from "axios";
 import React from "react";
-import { Button, Form, InputGroup, Badge } from "react-bootstrap";
+import {Button, Form} from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { ToastContainer, toast } from "react-toastify";
+import {toast} from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 class BindPhoneNum extends React.Component {
@@ -11,7 +11,7 @@ class BindPhoneNum extends React.Component {
     this.state = {
       env: "test",
       baseUrl: "https://test-api.duckdake.com",
-      phoneNumsToUnbind: "",
+      phoneNumsToUnbind: ""
     };
 
     this.handleEnv = this.handleEnv.bind(this);
@@ -22,7 +22,7 @@ class BindPhoneNum extends React.Component {
   }
 
   handleClear(event) {
-    this.setState({ value: "" });
+    this.setState({value: ""});
   }
 
   popUpToast(value) {
@@ -33,7 +33,7 @@ class BindPhoneNum extends React.Component {
       closeOnClick: true,
       pauseOnHover: true,
       draggable: true,
-      progress: undefined,
+      progress: undefined
     });
   }
 
@@ -48,23 +48,25 @@ class BindPhoneNum extends React.Component {
     } else {
       baseUrl = "http://localhost:8000";
     }
-    this.setState({ env: env, baseUrl: baseUrl });
+    this.setState({env: env, baseUrl: baseUrl});
   }
 
   // 绑定手机
   handleBindPhoneNum(event) {
-    this.setState({ phoneNumToBind: event.target.value });
+    this.setState({phoneNumToBind: event.target.value});
   }
 
   handleBindSno(event) {
-    this.setState({ snoToBind: event.target.value });
+    this.setState({snoToBind: event.target.value});
   }
 
   handleSubmitBindPhoneNum(event) {
     event.preventDefault();
     const phone_num = this.state.phoneNumToBind;
     const SNO = this.state.snoToBind;
-    const url = `${this.state.baseUrl}/api/admin/system/push/users/phone-num/bind-or-change`;
+    const url = `${
+      this.state.baseUrl
+    }/api/admin/system/push/users/phone-num/bind-or-change`;
     console.log("phoneNumToBind:", phone_num);
     console.log("snoToBind:", SNO);
 
@@ -73,11 +75,13 @@ class BindPhoneNum extends React.Component {
       url,
       data: {
         phone_num,
-        SNO,
-      },
+        SNO
+      }
     }).then((res) => {
       if (res.data.code === 2000) {
         this.popUpToast("绑定成功");
+      } else {
+        this.popUpToast(res.data.message);
       }
     });
   }
@@ -85,17 +89,23 @@ class BindPhoneNum extends React.Component {
   render() {
     return (
       <div>
-        <h3>绑定手机</h3>
-        <hr></hr>
-
-        <Form onSubmit={this.handleSubmitBindPhoneNum} className="App">
+        <Form onSubmit={
+            this.handleSubmitBindPhoneNum
+          }
+          className="App">
+          <Form.Group>
+            <h2>绑定手机</h2>
+            <hr/>
+          </Form.Group>
           <Form.Group controlId="exampleForm.ControlInput3">
             <Form.Label>请选择环境</Form.Label>
-            <Form.Control
-              as="select"
-              value={this.state.env}
-              onChange={this.handleEnv}
-            >
+            <Form.Control as="select"
+              value={
+                this.state.env
+              }
+              onChange={
+                this.handleEnv
+            }>
               <option value="test">测试服</option>
               <option value="dev">开发服</option>
               <option value="local">本地</option>
@@ -104,23 +114,31 @@ class BindPhoneNum extends React.Component {
 
           <Form.Group>
             <Form.Label>手机号</Form.Label>
-            <Form.Control
-              type="text"
-              value={this.state.phoneNumToBind}
-              onChange={this.handleBindPhoneNum}
-              placeholder="若该手机已绑定其他学号，则会自动解绑之前的学号"
-            ></Form.Control>
+            <Form.Control type="text"
+              value={
+                this.state.phoneNumToBind
+              }
+              onChange={
+                this.handleBindPhoneNum
+              }
+              placeholder="若该手机已绑定其他学号，将自动解绑之前的学号"
+              required></Form.Control>
           </Form.Group>
 
           <Form.Group>
             <Form.Label>学号</Form.Label>
-            <Form.Control
-              type="text"
-              value={this.state.snoToBind}
-              onChange={this.handleBindSno}
+            <Form.Control type="text"
+              value={
+                this.state.snoToBind
+              }
+              onChange={
+                this.handleBindSno
+              }
               placeholder="多个手机号以英文逗号分割"
-            ></Form.Control>
+              required></Form.Control>
           </Form.Group>
+          <br></br>
+
           <Button variant="warning" type="submit" size="lg" block>
             确定
           </Button>

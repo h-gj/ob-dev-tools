@@ -1,8 +1,8 @@
 import axios from "axios";
 import React from "react";
-import { Button, Form, InputGroup, Badge } from "react-bootstrap";
+import {Button, Form} from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { ToastContainer, toast } from "react-toastify";
+import {toast} from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 class UnbindPhoneNums extends React.Component {
@@ -11,21 +11,17 @@ class UnbindPhoneNums extends React.Component {
     this.state = {
       env: "test",
       baseUrl: "https://test-api.duckdake.com",
-      phoneNumsToUnbind: "",
+      phoneNumsToUnbind: ""
     };
 
     this.handleEnv = this.handleEnv.bind(this);
     this.handleUnbindPhoneNums = this.handleUnbindPhoneNums.bind(this);
-    this.handleSubmitUnbindPhoneNums = this.handleSubmitUnbindPhoneNums.bind(
-      this
-    );
-
-    //
+    this.handleSubmitUnbindPhoneNums = this.handleSubmitUnbindPhoneNums.bind(this);
     this.handleClear = this.handleClear.bind(this);
   }
 
   handleClear(event) {
-    this.setState({ value: "" });
+    this.setState({value: ""});
   }
 
   popUpToast(value) {
@@ -36,7 +32,7 @@ class UnbindPhoneNums extends React.Component {
       closeOnClick: true,
       pauseOnHover: true,
       draggable: true,
-      progress: undefined,
+      progress: undefined
     });
   }
 
@@ -51,26 +47,24 @@ class UnbindPhoneNums extends React.Component {
     } else {
       baseUrl = "http://localhost:8000";
     }
-    this.setState({ env: env, baseUrl: baseUrl });
+    this.setState({env: env, baseUrl: baseUrl});
   }
 
   handleUnbindPhoneNums(event) {
-    this.setState({ phoneNumsToUnbind: event.target.value });
+    this.setState({phoneNumsToUnbind: event.target.value});
   }
 
   handleSubmitUnbindPhoneNums(event) {
     event.preventDefault();
     const phone_num = this.state.phoneNumsToUnbind;
-    const url = `${this.state.baseUrl}/api/admin/system/push/users/phone-num/unbind`;
+    const url = `${
+      this.state.baseUrl
+    }/api/admin/system/push/users/phone-num/unbind`;
     console.log("phoneNumsToUnbind:", phone_num);
 
-    axios({
-      method: "post",
-      url,
-      data: {
-        phone_num,
-      },
-    }).then((res) => {
+    axios({method: "post", url, data: {
+        phone_num
+      }}).then((res) => {
       if (res.data.code === 2000) {
         this.popUpToast("解绑成功");
       } else {
@@ -82,17 +76,23 @@ class UnbindPhoneNums extends React.Component {
   render() {
     return (
       <div>
-        <h3>解绑手机</h3>
-        <hr></hr>
-
-        <Form onSubmit={this.handleSubmitUnbindPhoneNums} className="App">
+        <Form onSubmit={
+            this.handleSubmitUnbindPhoneNums
+          }
+          className="App">
+          <Form.Group>
+            <h2>解绑手机</h2>
+            <hr/>
+          </Form.Group>
           <Form.Group controlId="exampleForm.ControlInput2">
             <Form.Label>请选择环境</Form.Label>
-            <Form.Control
-              as="select"
-              value={this.state.env}
-              onChange={this.handleEnv}
-            >
+            <Form.Control as="select"
+              value={
+                this.state.env
+              }
+              onChange={
+                this.handleEnv
+            }>
               <option value="test">测试服</option>
               <option value="dev">开发服</option>
               <option value="local">本地</option>
@@ -102,13 +102,17 @@ class UnbindPhoneNums extends React.Component {
           <Form.Group>
             <Form.Label>手机号</Form.Label>
 
-            <Form.Control
-              type="text"
-              value={this.state.phoneNumsToUnbind}
-              onChange={this.handleUnbindPhoneNums}
+            <Form.Control type="text"
+              value={
+                this.state.phoneNumsToUnbind
+              }
+              onChange={
+                this.handleUnbindPhoneNums
+              }
               placeholder="多个手机号以英文逗号分割"
-            ></Form.Control>
+              required></Form.Control>
           </Form.Group>
+          <br></br>
 
           <Button variant="warning" type="submit" size="lg" block>
             确定

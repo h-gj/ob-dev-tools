@@ -1,9 +1,9 @@
 // import "./App.css";
 import axios from "axios";
 import React from "react";
-import { Button, Form, InputGroup, Badge } from "react-bootstrap";
+import {Button, Form, InputGroup, FormGroup} from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
-import { ToastContainer, toast } from "react-toastify";
+import {toast} from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
 class UnbindStuff extends React.Component {
@@ -13,19 +13,18 @@ class UnbindStuff extends React.Component {
       value: "",
       stuff: "phone_num",
       env: "test",
+      baseUrl: "https://test-api.duckdake.com"
     };
 
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleUnbind = this.handleUnbind.bind(this);
     this.handleEnv = this.handleEnv.bind(this);
-
-    //
     this.handleClear = this.handleClear.bind(this);
   }
 
   handleChange(event) {
-    this.setState({ value: event.target.value });
+    this.setState({value: event.target.value});
   }
 
   popUpToast(value) {
@@ -36,7 +35,7 @@ class UnbindStuff extends React.Component {
       closeOnClick: true,
       pauseOnHover: true,
       draggable: true,
-      progress: undefined,
+      progress: undefined
     });
   }
 
@@ -44,26 +43,34 @@ class UnbindStuff extends React.Component {
     event.preventDefault();
     const SNO = this.state.value;
     const stuff = this.state.stuff;
-    const env = this.state.env;
 
-    if (!(SNO && stuff && env)) {
-      this.popUpToast("请填写完整信息");
-      return;
+    if (stuff === 'user') {
+      const confirm = window.confirm(`确定要删除${SNO}这个用户吗？`);
+      if (confirm !== true) {
+        return;
+      }
     }
 
-    // return;
+    if (SNO === '10000' && stuff === 'user') {
+      this.popUpToast("10000号你也敢删？");
+      return
+    }
 
-    const url = `${this.state.baseUrl}/api/client/user/account/unbind-stuffs?SNO=${SNO}&stuff=${stuff}`;
+    const url = `${
+      this.state.baseUrl
+    }/api/client/user/account/unbind-stuffs?SNO=${SNO}&stuff=${stuff}`;
 
     axios.get(url).then((res) => {
       if (res.data.code === 2000) {
-        this.popUpToast("清除成功");
+        this.popUpToast("解绑成功");
+      } else {
+        this.popUpToast(res.data.message);
       }
     });
   }
 
   handleUnbind(event) {
-    this.setState({ stuff: event.target.value });
+    this.setState({stuff: event.target.value});
   }
 
   handleEnv(event) {
@@ -77,27 +84,33 @@ class UnbindStuff extends React.Component {
     } else {
       baseUrl = "http://localhost:8000";
     }
-    this.setState({ env: env, baseUrl: baseUrl });
+    this.setState({env: env, baseUrl: baseUrl});
   }
 
   handleClear(event) {
-    this.setState({ value: "" });
+    this.setState({value: ""});
   }
 
   render() {
     return (
       <div>
-        <h3>解绑一切</h3>
-        <hr></hr>
-
-        <Form onSubmit={this.handleSubmit} className="App">
+        <Form onSubmit={
+            this.handleSubmit
+          }
+          className="App">
+          <FormGroup>
+            <h2>解绑一切</h2>
+            <hr/>
+          </FormGroup>
           <Form.Group controlId="exampleForm.ControlInput1">
             <Form.Label>请选择环境</Form.Label>
-            <Form.Control
-              as="select"
-              value={this.state.env}
-              onChange={this.handleEnv}
-            >
+            <Form.Control as="select"
+              value={
+                this.state.env
+              }
+              onChange={
+                this.handleEnv
+            }>
               <option value="test">测试服</option>
               <option value="dev">开发服</option>
               <option value="local">本地</option>
@@ -108,15 +121,21 @@ class UnbindStuff extends React.Component {
             <Form.Label>学号</Form.Label>
 
             <InputGroup className="mb-3">
-              <Form.Control
-                type="text"
-                value={this.state.value}
-                onChange={this.handleChange}
+              <Form.Control type="text"
+                value={
+                  this.state.value
+                }
+                onChange={
+                  this.handleChange
+                }
                 placeholder="多个学号以英文逗号分割"
-              ></Form.Control>
+                required></Form.Control>
 
               <InputGroup.Append>
-                <Button variant="outline-warning" onClick={this.handleClear}>
+                <Button variant="outline-warning"
+                  onClick={
+                    this.handleClear
+                }>
                   清空
                 </Button>
               </InputGroup.Append>
@@ -125,11 +144,13 @@ class UnbindStuff extends React.Component {
 
           <Form.Group controlId="exampleForm.ControlSelect1">
             <Form.Label>解绑项</Form.Label>
-            <Form.Control
-              as="select"
-              value={this.state.stuff}
-              onChange={this.handleUnbind}
-            >
+            <Form.Control as="select"
+              value={
+                this.state.stuff
+              }
+              onChange={
+                this.handleUnbind
+            }>
               <option value="phone_num">手机号</option>
               <option value="wx">微信</option>
               <option value="qq">QQ</option>
@@ -137,6 +158,7 @@ class UnbindStuff extends React.Component {
               <option value="user">整个用户（删除）</option>
             </Form.Control>
           </Form.Group>
+          <br></br>
           <Button variant="warning" type="submit" size="lg" block>
             确定
           </Button>
