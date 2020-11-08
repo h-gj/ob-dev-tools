@@ -11,16 +11,23 @@ class UnbindStuff extends React.Component {
     super(props);
     this.state = {
       value: "",
-      stuff: "phone_num",
+      stuffs: "",
       env: "test",
-      baseUrl: "https://test-api.duckdake.com"
+      baseUrl: "https://test-api.duckdake.com",
+      phone_num_selected: false,
+      wx_selected: false,
+      qq_selected: false,
+      ap_selected: false,
+      all_selected: false,
+      user_selected: false,
     };
 
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
-    this.handleUnbind = this.handleUnbind.bind(this);
     this.handleEnv = this.handleEnv.bind(this);
     this.handleClear = this.handleClear.bind(this);
+    this.handleUnbindItemsChange = this.handleUnbindItemsChange.bind(this);
+    
   }
 
   handleChange(event) {
@@ -42,23 +49,47 @@ class UnbindStuff extends React.Component {
   handleSubmit(event) {
     event.preventDefault();
     const SNO = this.state.value;
-    const stuff = this.state.stuff;
+    let stuffs = this.state.stuffs;
+    const wx_selected = this.state.wx_selected;
+    const qq_selected = this.state.qq_selected;
+    const ap_selected = this.state.ap_selected;
+    const phone_num_selected = this.state.phone_num_selected;
+    const all_selected = this.state.all_selected;
+    const user_selected = this.state.user_selected;
 
-    if (stuff === 'user') {
-      const confirm = window.confirm(`确定要删除${SNO}这个用户吗？`);
+    if(wx_selected) {
+      stuffs += 'wx,'
+    }
+    if(qq_selected) {
+      stuffs += 'qq,'
+    }
+    if(ap_selected) {
+      stuffs += 'ap,'
+    }
+    if(phone_num_selected) {
+      stuffs += 'phone_num,'
+    }
+    if(all_selected) {
+      stuffs += 'qq,wx,ap,phone_num,'
+    }
+    if(user_selected) {
+      stuffs += 'user,'
+    }
+    if(stuffs === '') {
+      this.popUpToast("不选择解绑项，给你解绑个🔨")
+      return
+    }
+
+    if (user_selected === true) {
+      const confirm = window.confirm(`你确定要删除${SNO}吗？`);
       if (confirm !== true) {
         return;
       }
     }
 
-    if (SNO === '10000' && stuff === 'user') {
-      this.popUpToast("10000号你也敢删？");
-      return
-    }
-
     const url = `${
       this.state.baseUrl
-    }/api/client/user/account/unbind-stuffs?SNO=${SNO}&stuff=${stuff}`;
+    }/api/client/user/account/unbind-stuffs?SNO=${SNO}&stuffs=${stuffs}`;
 
     axios.get(url).then((res) => {
       if (res.data.code === 2000) {
@@ -67,10 +98,6 @@ class UnbindStuff extends React.Component {
         this.popUpToast(res.data.message);
       }
     });
-  }
-
-  handleUnbind(event) {
-    this.setState({stuff: event.target.value});
   }
 
   handleEnv(event) {
@@ -85,6 +112,35 @@ class UnbindStuff extends React.Component {
       baseUrl = "http://localhost:8000";
     }
     this.setState({env: env, baseUrl: baseUrl});
+  }
+
+  handleUnbindItemsChange(item) {
+    console.log('Check box changed.');
+    let selectedItemToFlip = {}
+    switch (item) {
+      case 'qq':
+        selectedItemToFlip['qq_selected'] = !this.state.qq_selected;
+        break;
+      case 'wx':
+        selectedItemToFlip['wx_selected'] = !this.state.wx_selected;
+        break;
+      case 'ap':
+        selectedItemToFlip['ap_selected'] = !this.state.ap_selected;
+        break;
+      case 'phone_num':
+        selectedItemToFlip['phone_num_selected'] = !this.state.phone_num_selected;
+        break;
+      case 'all':
+        selectedItemToFlip['all_selected'] = !this.state.all_selected;
+        break;
+      case 'user':
+        selectedItemToFlip['user_selected'] = !this.state.user_selected;
+        break;
+      default:
+        break;
+    }
+    this.setState(selectedItemToFlip);
+    console.log('selectedItemToFlip:', selectedItemToFlip)
   }
 
   handleClear(event) {
@@ -142,23 +198,15 @@ class UnbindStuff extends React.Component {
             </InputGroup>
           </Form.Group>
 
-          <Form.Group controlId="exampleForm.ControlSelect1">
-            <Form.Label>解绑项</Form.Label>
-            <Form.Control as="select"
-              value={
-                this.state.stuff
-              }
-              onChange={
-                this.handleUnbind
-            }>
-              <option value="phone_num">手机号</option>
-              <option value="wx">微信</option>
-              <option value="qq">QQ</option>
-              <option value="ap">AppleID</option>
-              <option value="user">整个用户（删除）</option>
-            </Form.Control>
+          <Form.Group controlId="formBasicCheckbox">
+            <Form.Label>请选择解绑项（可多选哦）</Form.Label>
+            <Form.Check type="checkbox" label="手机号" defaultChecked={this.state.phone_num_selected} onChange={() => this.handleUnbindItemsChange('phone_num')} />
+            <Form.Check type="checkbox" label="微信" defaultChecked={this.state.wx_selected} onChange={() => this.handleUnbindItemsChange('wx')}/>
+            <Form.Check type="checkbox" label="QQ" defaultChecked={this.state.qq_selected} onChange={() => this.handleUnbindItemsChange('qq')}/>
+            <Form.Check type="checkbox" label="AppleID" defaultChecked={this.state.ap_selected} onChange={() => this.handleUnbindItemsChange('ap')}/>
+            <Form.Check type="checkbox" label="All of above" defaultChecked={this.state.all_selected} onChange={() => this.handleUnbindItemsChange('all')}/>
+            <Form.Check type="checkbox" label="The whole user" defaultChecked={this.state.user_selected} onChange={() => this.handleUnbindItemsChange('user')}/>
           </Form.Group>
-          <br></br>
           <Button variant="warning" type="submit" size="lg" block>
             确定
           </Button>

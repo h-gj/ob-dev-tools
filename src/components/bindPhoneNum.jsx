@@ -134,7 +134,7 @@ class BindPhoneNum extends React.Component {
               onChange={
                 this.handleBindSno
               }
-              placeholder="多个手机号以英文逗号分割"
+              placeholder="请输入学号"
               required></Form.Control>
           </Form.Group>
           <br></br>
