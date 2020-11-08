@@ -8,6 +8,7 @@ import SystemPush from './components/systemPush'
 import React from "react";
 import {Col, Row, Nav, Tab} from 'react-bootstrap'
 import UnbindPhoneNums from './components/unBindPhoneNums';
+import Home from './components/home';
 
 
 export default function App() {
@@ -18,6 +19,9 @@ export default function App() {
         <Col sm={2}
           className="leftColumn">
           <Nav variant="pills" className="flex-column">
+            <Nav.Item>
+              <Nav.Link eventKey="fifth">更新日志</Nav.Link>
+            </Nav.Item>
             <Nav.Item>
               <Nav.Link eventKey="first">解绑一切</Nav.Link>
             </Nav.Item>
@@ -35,6 +39,9 @@ export default function App() {
         <Col sm={10}
           className="rightColumn">
           <Tab.Content>
+            <Tab.Pane eventKey="fifth">
+              <Home/>
+            </Tab.Pane>
             <Tab.Pane eventKey="first">
               <UnbindStuff/>
             </Tab.Pane>
