@@ -14,7 +14,7 @@
     "react-notify": "^3.0.0",
     "react-scripts": "4.0.0",
     "react-timeline-scribble": "^1.0.14",
-    "react-toastify": "^6.0.9",
+    "react-toastify": "^6.2.0",
     "web-vitals": "^0.2.4"
   },
   "scripts": {
